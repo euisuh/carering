@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #f7f7f8;
+      --surface:      #ffffff;
+      --border:       #e3e4e8;
+      --border-light: #f0f0f2;
+      --text:         #111827;
+      --text-2:       #374151;
+      --muted:        #6b7280;
+      --muted-2:      #9ca3af;
+      --accent:       #2563eb;
+      --accent-dim:   rgba(37,99,235,0.08);
+      --green:        #059669;
+      --green-dim:    rgba(5,150,105,0.08);
+      --amber:        #d97706;
+      --amber-dim:    rgba(217,119,6,0.08);
+      --red:          #dc2626;
+      --red-dim:      rgba(220,38,38,0.08);
+      --radius:       8px;
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ─── NAV ───────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: 56px;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex; align-items: center; gap: 32px;
+    }
+    .nav-brand {
+      font-size: 15px; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--text); flex-shrink: 0;
+    }
+    .nav-brand em { color: var(--accent); font-style: normal; }
+    .nav-tabs {
+      display: flex; gap: 0; align-items: stretch;
+      height: 100%;
+    }
+    .nav-tab {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      padding: 0 16px; font-size: 14px; font-weight: 500;
+      color: var(--muted); cursor: pointer; font-family: inherit;
+      display: flex; align-items: center;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text-2); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .nav-right {
+      margin-left: auto; display: flex; align-items: center; gap: 16px;
+    }
+    .nav-bell {
+      font-size: 16px; cursor: pointer; color: var(--muted);
+      position: relative;
+    }
+    .nav-bell::after {
+      content: ''; position: absolute; top: 1px; right: 0;
+      width: 7px; height: 7px;
+      background: var(--red); border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 32px; height: 32px;
+      background: var(--accent); color: #fff;
+      border-radius: 50%;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .nav-parent-tag {
+      font-size: 13px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nav-parent-tag .dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+    /* ─── LAYOUT ─────────────────────────────────────────── */
+    .page { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── CARD ───────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .card-subtitle { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .card-body { padding: 20px; }
+
+    /* ─── BADGES ─────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .badge-green  { background: var(--green-dim); color: var(--green); }
+    .badge-green .dot { background: var(--green); }
+    .badge-amber  { background: var(--amber-dim); color: var(--amber); }
+    .badge-amber .dot { background: var(--amber); }
+    .badge-red    { background: var(--red-dim);   color: var(--red);   }
+    .badge-red .dot { background: var(--red); }
+    .badge-blue   { background: var(--accent-dim); color: var(--accent); }
+
+    /* ─── HOME TAB ───────────────────────────────────────── */
+    .home-top {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px; margin-bottom: 16px;
+    }
+    .parent-card { grid-column: span 2; }
+    .parent-card .card-body {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .parent-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .parent-info h2 {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .parent-info h2 span { font-size: 14px; font-weight: 400; color: var(--muted); }
+    .parent-meta { display: flex; gap: 12px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+    .meta-item { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .streak-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(217,119,6,0.08); color: var(--amber);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* Metrics grid */
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .metric-cell {
+      background: var(--surface);
+      padding: 18px 20px;
+    }
+    .metric-label {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 28px; font-weight: 700; letter-spacing: -0.04em;
+      color: var(--text); line-height: 1;
+    }
+    .metric-value .unit {
+      font-size: 14px; font-weight: 400; color: var(--muted); margin-left: 2px;
+    }
+    .metric-delta {
+      margin-top: 6px; font-size: 12px; font-weight: 500;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .delta-up   { color: var(--green); }
+    .delta-down { color: var(--red); }
+    .delta-flat { color: var(--muted); }
+
+    /* Next call card */
+    .next-call-card .card-body {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .next-call-time {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.03em;
+    }
+    .next-call-detail { font-size: 12px; color: var(--muted); }
+
+    /* Chart card */
+    .chart-card { margin-bottom: 16px; }
+    .chart-wrap { padding: 20px 20px 12px; }
+    .chart-svg { width: 100%; display: block; overflow: visible; }
+    .chart-x-labels {
+      display: flex; justify-content: space-between;
+      padding: 0 8px; margin-top: 4px;
+    }
+    .chart-x-label { font-size: 10px; color: var(--muted-2); }
+
+    /* Recent calls */
+    .recent-calls-card .card-body { padding: 0; }
+    .calls-table { width: 100%; border-collapse: collapse; }
+    .calls-table th {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 10px 20px; text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      background: #fafafa;
+    }
+    .calls-table td {
+      padding: 11px 20px; font-size: 13px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .calls-table tr:last-child td { border-bottom: none; }
+    .calls-table tbody tr:hover td { background: #fafbfc; }
+    .score-pill {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 22px; border-radius: 4px;
+      font-size: 12px; font-weight: 700;
+    }
+    .score-green { background: var(--green-dim); color: var(--green); }
+    .score-amber { background: var(--amber-dim); color: var(--amber); }
+    .score-red   { background: var(--red-dim);   color: var(--red);   }
+    .text-muted { color: var(--muted); }
+    .link-btn {
+      font-size: 12px; color: var(--accent); background: none; border: none;
+      cursor: pointer; font-family: inherit; padding: 0;
+    }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* ─── ANALYTICS TAB ─────────────────────────────────── */
+    .period-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 20px;
+    }
+    .period-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 7px 16px; font-size: 13px; font-weight: 500;
+      color: var(--muted); cursor: pointer; font-family: inherit;
+      margin-right: -1px; position: relative;
+    }
+    .period-btn:first-child { border-radius: 6px 0 0 6px; }
+    .period-btn:last-child  { border-radius: 0 6px 6px 0; margin-right: 0; }
+    .period-btn.active {
+      background: var(--accent-dim); color: var(--accent);
+      border-color: var(--accent); z-index: 1; font-weight: 600;
+    }
+    .period-btn:hover:not(.active) { background: #f9f9fb; color: var(--text-2); }
+    .charts-2x2 {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 16px;
+    }
+    .mini-chart-card .chart-wrap { padding: 16px 16px 8px; }
+    .mini-chart-card .chart-x-labels { padding: 0 4px; }
+
+    .insight-card .card-body {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .insight-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--accent-dim); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .insight-text { font-size: 14px; line-height: 1.7; color: var(--text-2); }
+    .insight-text strong { color: var(--text); }
+
+    /* Trend summary row */
+    .trend-summary {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .trend-cell {
+      background: var(--surface); padding: 14px 16px;
+    }
+    .trend-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 4px; }
+    .trend-val { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
+    .trend-delta { font-size: 11px; margin-top: 2px; }
+
+    /* ─── HISTORY TAB ────────────────────────────────────── */
+    .history-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .search-input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 12px 8px 36px;
+      font-size: 13px; color: var(--text); font-family: inherit;
+      width: 240px; position: relative;
+    }
+    .search-wrap { position: relative; }
+    .search-icon {
+      position: absolute; left: 10px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px; color: var(--muted-2); pointer-events: none;
+    }
+    .filter-select {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 12px;
+      font-size: 13px; color: var(--text); font-family: inherit;
+    }
+    .history-table-wrap { overflow: hidden; }
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 11px 20px; text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa; white-space: nowrap;
+    }
+    .history-table th .sort-icon { color: var(--muted-2); margin-left: 4px; font-size: 10px; }
+    .history-table td {
+      padding: 12px 20px; font-size: 13px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-2); white-space: nowrap;
+    }
+    .history-table td.date-col { color: var(--text); font-weight: 500; }
+    .history-table tbody tr:hover td { background: #fafbfc; }
+    .history-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ─── UTILS ──────────────────────────────────────────── */
+    .section-header {
+      display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;
+    }
+    .section-title { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+    .section-sub   { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 860px) {
+      .home-top { grid-template-columns: 1fr; }
+      .parent-card { grid-column: span 1; }
+      .metrics-grid { grid-template-columns: repeat(2,1fr); }
+      .charts-2x2 { grid-template-columns: 1fr; }
+      .trend-summary { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Care<em>Ring</em></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="home">홈</button>
+      <button class="nav-tab" data-tab="analytics">분석</button>
+      <button class="nav-tab" data-tab="history">통화 기록</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-parent-tag">
+        <span class="dot"></span>
+        <span>김순자님 모니터링 중</span>
+      </div>
+      <div class="nav-bell">🔔</div>
+      <div class="nav-avatar">정</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="tab-home" class="tab-panel active">
+  <div class="page">
+
+    <!-- Parent + Next Call -->
+    <div class="home-top">
+
+      <div class="card parent-card">
+        <div class="card-body">
+          <div class="parent-avatar">👵</div>
+          <div class="parent-info" style="flex:1;">
+            <h2>김순자 <span>· 74세</span></h2>
+            <div style="margin-top:6px;">
+              <span class="badge badge-green"><span class="dot"></span>정상 범위</span>
+            </div>
+            <div class="parent-meta">
+              <span class="meta-item">📍 서울 강북구</span>
+              <span class="meta-item">☎ 유선전화 02-XXX-XXXX</span>
+              <span class="streak-badge">🔥 22일 연속</span>
+            </div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">오늘 마지막 통화</div>
+            <div style="font-size:15px; font-weight:700;">오전 10:24</div>
+            <div style="font-size:12px; color:var(--muted);">8분 42초 · 감정점수 78</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card next-call-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">다음 통화 예정</div>
+            <div class="card-subtitle">내일 · 자동 발신</div>
+          </div>
+          <span class="badge badge-blue">스탠다드</span>
+        </div>
+        <div class="card-body" style="padding:16px 20px;">
+          <div class="next-call-time">오전 10:00 – 11:00</div>
+          <div class="next-call-detail" style="margin-top:4px;">선호 시간대 기준 자동 발신</div>
+          <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border-light); display:flex; justify-content:space-between; font-size:12px; color:var(--muted);">
+            <span>이번 달 통화</span>
+            <span style="font-weight:600; color:var(--text);">28 / 30 완료</span>
+          </div>
+          <div style="margin-top:8px; height:5px; background:var(--border); border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:93.3%; background:var(--green); border-radius:3px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- KPI Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-cell">
+        <div class="metric-label">평균 응답 지연</div>
+        <div class="metric-value">1.8<span class="unit">s</span></div>
+        <div class="metric-delta delta-up">▼ 0.2s &nbsp;vs 지난 주</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-label">평균 발화 속도</div>
+        <div class="metric-value">112<span class="unit">WPM</span></div>
+        <div class="metric-delta delta-flat">— 지난 주와 동일</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-label">감정 점수</div>
+        <div class="metric-value">78<span class="unit">/100</span></div>
+        <div class="metric-delta delta-up">▲ 3pt &nbsp;vs 지난 주</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-label">이번 달 통화 완료율</div>
+        <div class="metric-value">93<span class="unit">%</span></div>
+        <div class="metric-delta delta-up">28 / 30 통화</div>
+      </div>
+    </div>
+
+    <!-- 14-day Emotional Trend -->
+    <div class="card chart-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">감정 점수 추이 — 최근 14일</div>
+          <div class="card-subtitle">통화당 음성 임베딩 기반 감정 분석 결과</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:center; font-size:12px; color:var(--muted);">
+          <span>현재 <strong style="color:var(--text)">78</strong></span>
+          <span>4주 평균 <strong style="color:var(--text)">76.2</strong></span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg id="home-chart" class="chart-svg" height="130"></svg>
+        <div class="chart-x-labels" id="home-chart-labels"></div>
+      </div>
+    </div>
+
+    <!-- Recent Calls -->
+    <div class="card recent-calls-card">
+      <div class="card-header">
+        <div class="card-title">최근 통화 내역</div>
+        <button class="link-btn" onclick="switchTab('history')">전체 보기 →</button>
+      </div>
+      <table class="calls-table">
+        <thead>
+          <tr>
+            <th>날짜</th>
+            <th>시간</th>
+            <th>통화 시간</th>
+            <th>감정 점수</th>
+            <th>응답 지연</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="recent-calls-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ ANALYTICS ═══════════════ -->
+<div id="tab-analytics" class="tab-panel">
+  <div class="page">
+
+    <div class="section-header">
+      <div class="section-title">건강 지표 분석</div>
+      <div class="section-sub">김순자님 · 음성 분석 데이터 기반</div>
+    </div>
+
+    <!-- Period selector -->
+    <div class="period-bar">
+      <button class="period-btn active" data-period="week">이번 주</button>
+      <button class="period-btn" data-period="month">이번 달</button>
+      <button class="period-btn" data-period="quarter">3개월</button>
+    </div>
+
+    <!-- Period summary row -->
+    <div class="trend-summary">
+      <div class="trend-cell">
+        <div class="trend-label">감정 점수 평균</div>
+        <div class="trend-val" id="sum-emotional">77.1</div>
+        <div class="trend-delta delta-up" id="sum-emotional-d">▲ 3.2pt</div>
+      </div>
+      <div class="trend-cell">
+        <div class="trend-label">응답 지연 평균</div>
+        <div class="trend-val" id="sum-latency">1.87<span style="font-size:14px;font-weight:400;color:var(--muted)">s</span></div>
+        <div class="trend-delta delta-up" id="sum-latency-d">▼ 0.18s 개선</div>
+      </div>
+      <div class="trend-cell">
+        <div class="trend-label">발화 속도 평균</div>
+        <div class="trend-val" id="sum-speech">111.9<span style="font-size:14px;font-weight:400;color:var(--muted)">WPM</span></div>
+        <div class="trend-delta delta-flat" id="sum-speech-d">— 안정적</div>
+      </div>
+      <div class="trend-cell">
+        <div class="trend-label">침묵 빈도 평균</div>
+        <div class="trend-val" id="sum-pauses">5.1<span style="font-size:14px;font-weight:400;color:var(--muted)">회</span></div>
+        <div class="trend-delta delta-flat" id="sum-pauses-d">— 정상 범위</div>
+      </div>
+    </div>
+
+    <!-- 2x2 Charts -->
+    <div class="charts-2x2">
+      <div class="card mini-chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">감정 점수</div>
+            <div class="card-subtitle">음성 임베딩 기반 감정 상태 (/100)</div>
+          </div>
+          <span class="badge badge-green" id="emotional-delta">▲ 3.2pt</span>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart-emotional" class="chart-svg" height="110"></svg>
+          <div class="chart-x-labels" id="chart-emotional-labels"></div>
+        </div>
+      </div>
+
+      <div class="card mini-chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">응답 지연 시간</div>
+            <div class="card-subtitle">발화 시작까지 평균 지연 (초)</div>
+          </div>
+          <span class="badge badge-green" id="latency-delta">▼ 0.18s</span>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart-latency" class="chart-svg" height="110"></svg>
+          <div class="chart-x-labels" id="chart-latency-labels"></div>
+        </div>
+      </div>
+
+      <div class="card mini-chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">발화 속도</div>
+            <div class="card-subtitle">분당 단어 수 (WPM)</div>
+          </div>
+          <span class="badge badge-blue" id="speech-delta">— 안정</span>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart-speech" class="chart-svg" height="110"></svg>
+          <div class="chart-x-labels" id="chart-speech-labels"></div>
+        </div>
+      </div>
+
+      <div class="card mini-chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">침묵 빈도</div>
+            <div class="card-subtitle">통화당 1초 이상 침묵 횟수</div>
+          </div>
+          <span class="badge badge-blue" id="pauses-delta">— 정상</span>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart-pauses" class="chart-svg" height="110"></svg>
+          <div class="chart-x-labels" id="chart-pauses-labels"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insight -->
+    <div class="card insight-card">
+      <div class="card-header">
+        <div class="card-title">AI 분석 요약</div>
+        <span style="font-size:11px; color:var(--muted);" id="insight-period-label">이번 주 기준</span>
+      </div>
+      <div class="card-body">
+        <div class="insight-icon">✦</div>
+        <div class="insight-text" id="insight-text">
+          이번 주 순자님의 통화 패턴은 <strong>전반적으로 안정적</strong>이었습니다.
+          응답 속도와 발화 속도 모두 정상 범위를 유지하였으며, 감정 점수는 주간 평균
+          <strong>77.1점</strong>으로 지난 주 대비 <strong>3.2점 상승</strong>하여 긍정적인 변화를 보였습니다.
+          특히 <strong>목요일 통화</strong>에서 감정 점수가 주간 최고치(83점)를 기록하였으며,
+          활발한 대화와 밝은 목소리가 관찰되었습니다. 다음 주에도 현재 상태가 유지될 것으로 예상됩니다.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ HISTORY ═══════════════ -->
+<div id="tab-history" class="tab-panel">
+  <div class="page">
+
+    <div class="section-header">
+      <div class="section-title">통화 기록</div>
+      <div class="section-sub">총 28회 통화 완료 (이번 달)</div>
+    </div>
+
+    <div class="history-toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" placeholder="날짜, 메모 검색…" />
+      </div>
+      <select class="filter-select">
+        <option>전체 상태</option>
+        <option>정상</option>
+        <option>관심</option>
+        <option>주의</option>
+      </select>
+      <select class="filter-select">
+        <option>이번 달</option>
+        <option>지난 달</option>
+        <option>3개월</option>
+      </select>
+      <div style="margin-left:auto; font-size:12px; color:var(--muted);">28건 표시 중</div>
+    </div>
+
+    <div class="card history-table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>날짜 <span class="sort-icon">↕</span></th>
+            <th>시간</th>
+            <th>통화 시간</th>
+            <th>감정 점수 <span class="sort-icon">↕</span></th>
+            <th>응답 지연</th>
+            <th>발화 속도</th>
+            <th>침묵</th>
+            <th>상태</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────
+
+const CALL_HISTORY = [
+  { date:'2026-04-16', time:'10:24', dur:'8m 42s', score:78, lat:1.8, wpm:112, pau:5, status:'정상', note:'' },
+  { date:'2026-04-15', time:'10:31', dur:'7m 15s', score:76, lat:1.9, wpm:110, pau:5, status:'정상', note:'' },
+  { date:'2026-04-14', time:'10:18', dur:'9m 03s', score:71, lat:2.1, wpm:107, pau:7, status:'관심', note:'입맛 없다고 하심' },
+  { date:'2026-04-13', time:'10:24', dur:'8m 42s', score:81, lat:1.7, wpm:116, pau:4, status:'정상', note:'뜨개질 완성 언급' },
+  { date:'2026-04-12', time:'10:08', dur:'6m 55s', score:74, lat:1.9, wpm:109, pau:5, status:'정상', note:'' },
+  { date:'2026-04-11', time:'10:22', dur:'10m 12s', score:79, lat:1.8, wpm:113, pau:5, status:'정상', note:'' },
+  { date:'2026-04-10', time:'10:35', dur:'7m 48s', score:77, lat:2.0, wpm:111, pau:6, status:'정상', note:'' },
+  { date:'2026-04-09', time:'10:15', dur:'8m 20s', score:75, lat:1.9, wpm:110, pau:5, status:'정상', note:'' },
+  { date:'2026-04-08', time:'10:28', dur:'9m 05s', score:73, lat:2.1, wpm:108, pau:7, status:'관심', note:'피곤하다 언급' },
+  { date:'2026-04-07', time:'10:19', dur:'7m 33s', score:80, lat:1.7, wpm:114, pau:4, status:'정상', note:'' },
+  { date:'2026-04-06', time:'10:41', dur:'11m 02s', score:82, lat:1.6, wpm:116, pau:4, status:'정상', note:'손녀 이야기로 활기참' },
+  { date:'2026-04-05', time:'10:24', dur:'8m 14s', score:76, lat:2.0, wpm:111, pau:5, status:'정상', note:'' },
+  { date:'2026-04-04', time:'10:17', dur:'6m 42s', score:69, lat:2.4, wpm:104, pau:8, status:'주의', note:'응답 느림·무기력 관찰' },
+  { date:'2026-04-03', time:'10:33', dur:'9m 21s', score:77, lat:1.9, wpm:112, pau:5, status:'정상', note:'' },
+  { date:'2026-04-02', time:'10:28', dur:'8m 05s', score:75, lat:2.0, wpm:110, pau:6, status:'정상', note:'' },
+];
+
+const CHART_DATA = {
+  week: {
+    labels: ['월','화','수','목','금','토','일'],
+    emotional: [74, 75, 77, 83, 76, 78, 78],
+    latency:   [2.0, 1.9, 1.8, 1.9, 1.8, 1.8, 1.8],
+    speech:    [110, 112, 111, 116, 111, 112, 111],
+    pauses:    [5,   5,   4,   6,   5,   5,   5],
+    insight: `이번 주 순자님의 통화 패턴은 <strong>전반적으로 안정적</strong>이었습니다. 응답 속도와 발화 속도 모두 정상 범위를 유지하였으며, 감정 점수는 주간 평균 <strong>77.1점</strong>으로 지난 주 대비 <strong>3.2점 상승</strong>하여 긍정적인 변화를 보였습니다. 특히 <strong>목요일 통화</strong>에서 감정 점수가 주간 최고치(83점)를 기록하였으며, 활발한 대화와 밝은 목소리가 관찰되었습니다.`,
+    sums: { emotional:'77.1', emotionalD:'▲ 3.2pt', latency:'1.87', latencyD:'▼ 0.18s 개선', speech:'111.9', speechD:'— 안정적', pauses:'5.1', pausesD:'— 정상 범위' }
+  },
+  month: {
+    labels: ['3/18','3/20','3/22','3/24','3/26','3/28','3/30','4/1','4/3','4/5','4/7','4/9','4/11','4/13','4/16'],
+    emotional: [72,74,71,76,75,78,74,72,73,76,78,75,79,81,78],
+    latency:   [2.3,2.1,2.2,2.0,1.9,2.1,2.3,2.4,2.1,1.9,1.8,1.9,1.8,1.7,1.8],
+    speech:    [106,108,107,112,110,111,108,106,108,112,115,111,114,116,112],
+    pauses:    [6,5,7,5,5,6,7,7,6,4,5,7,5,5,5],
+    insight: `이번 달(3월 18일~4월 16일) 동안 순자님의 감정 점수는 <strong>완만한 상승 추세</strong>를 보였습니다. 응답 지연은 월초 2.3s에서 월말 1.8s로 <strong>뚜렷하게 개선</strong>되었으며, 이는 통화 횟수가 누적될수록 AI 대화에 대한 적응도가 높아진 결과로 해석됩니다. 4월 4일(주의 구간)에 일시적인 하락이 있었으나 이후 <strong>빠르게 회복</strong>되었습니다.`,
+    sums: { emotional:'75.8', emotionalD:'▲ 4.6pt (월초 대비)', latency:'2.01', latencyD:'▼ 0.5s 개선', speech:'110.5', speechD:'▲ 2 WPM', pauses:'5.7', pausesD:'관심 구간 1회' }
+  },
+  quarter: {
+    labels: ['1/3주','1/4주','2/1주','2/2주','2/3주','2/4주','3/1주','3/2주','3/3주','3/4주','4/1주','4/2주'],
+    emotional: [70,72,71,74,73,75,74,76,75,77,76,78],
+    latency:   [2.5,2.4,2.3,2.2,2.3,2.1,2.2,2.0,2.1,1.9,1.9,1.8],
+    speech:    [104,106,107,109,108,110,109,111,110,112,111,112],
+    pauses:    [7,6,7,6,7,6,6,5,6,5,5,5],
+    insight: `3개월 추이를 보면 순자님의 <strong>전반적인 건강 지표가 꾸준히 개선</strong>되고 있습니다. 감정 점수는 1월 말 70점에서 현재 78점으로 <strong>8점 상승</strong>하였고, 응답 지연은 2.5s에서 1.8s로 단축되었습니다. AI 통화에 대한 적응과 신뢰가 형성되면서 <strong>대화 품질이 지속적으로 향상</strong>되는 패턴을 보입니다. 이러한 추세는 정기적인 AI 안부 통화의 효과를 보여주는 긍정적인 지표입니다.`,
+    sums: { emotional:'74.3', emotionalD:'▲ 8pt (3개월)', latency:'2.14', latencyD:'▼ 0.7s 개선', speech:'109.2', speechD:'▲ 8 WPM', pauses:'6.1', pausesD:'꾸준한 감소 추세' }
+  }
+};
+
+// ─── CHART RENDERER ────────────────────────────────────────────
+
+function renderChart(svgId, labelsId, values, opts = {}) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const W = svg.parentElement.offsetWidth || 500;
+  const H = parseInt(svg.getAttribute('height')) || 110;
+  const padLeft = 10, padRight = 10, padTop = 12, padBottom = 8;
+  const cW = W - padLeft - padRight;
+  const cH = H - padTop - padBottom;
+
+  const color  = opts.color  || '#2563eb';
+  const minVal = opts.min !== undefined ? opts.min : Math.min(...values) - (Math.max(...values) - Math.min(...values)) * 0.15;
+  const maxVal = opts.max !== undefined ? opts.max : Math.max(...values) + (Math.max(...values) - Math.min(...values)) * 0.15;
+  const range  = maxVal - minVal || 1;
+
+  const pts = values.map((v, i) => ({
+    x: padLeft + (i / Math.max(values.length - 1, 1)) * cW,
+    y: padTop  + (1 - (v - minVal) / range) * cH
+  }));
+
+  // Smooth bezier path
+  let line = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const t = 0.35;
+    const cp1x = (pts[i-1].x + (pts[i].x - pts[i-1].x) * t).toFixed(1);
+    const cp2x = (pts[i].x   - (pts[i].x - pts[i-1].x) * t).toFixed(1);
+    line += ` C${cp1x},${pts[i-1].y.toFixed(1)} ${cp2x},${pts[i].y.toFixed(1)} ${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)}`;
+  }
+  const area = line + ` L${pts[pts.length-1].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+
+  const gradId = 'g' + svgId;
+  const gridLines = [0.25, 0.5, 0.75].map(r =>
+    `<line x1="${padLeft}" y1="${(padTop + r * cH).toFixed(1)}" x2="${W - padRight}" y2="${(padTop + r * cH).toFixed(1)}" stroke="#f0f1f3" stroke-width="1"/>`
+  ).join('');
+
+  const lastPt = pts[pts.length - 1];
+
+  svg.setAttribute('width', W);
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="${color}" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${gridLines}
+    <path d="${area}" fill="url(#${gradId})"/>
+    <path d="${line}" fill="none" stroke="${color}" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lastPt.x.toFixed(1)}" cy="${lastPt.y.toFixed(1)}" r="4" fill="${color}" stroke="white" stroke-width="2"/>
+  `;
+
+  // X labels (show ~6 evenly)
+  if (labelsId) {
+    const labelsEl = document.getElementById(labelsId);
+    if (labelsEl && opts.labels) {
+      const step = Math.max(1, Math.floor(opts.labels.length / 6));
+      const shown = opts.labels.filter((_, i) => i % step === 0 || i === opts.labels.length - 1);
+      labelsEl.innerHTML = shown.map(l => `<span class="chart-x-label">${l}</span>`).join('');
+    }
+  }
+}
+
+// ─── TABS ───────────────────────────────────────────────────────
+
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'tab-' + tabId);
+  });
+  if (tabId === 'home')      renderHomeCharts();
+  if (tabId === 'analytics') renderAnalyticsCharts();
+}
+
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ─── PERIOD SELECTOR ────────────────────────────────────────────
+
+let currentPeriod = 'week';
+
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentPeriod = btn.dataset.period;
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b === btn));
+    renderAnalyticsCharts();
+    updateInsight();
+  });
+});
+
+function updateInsight() {
+  const d = CHART_DATA[currentPeriod];
+  document.getElementById('insight-text').innerHTML = d.insight;
+  const labels = { week: '이번 주', month: '이번 달', quarter: '3개월' };
+  document.getElementById('insight-period-label').textContent = labels[currentPeriod] + ' 기준';
+
+  document.getElementById('sum-emotional').textContent   = d.sums.emotional;
+  document.getElementById('sum-emotional-d').textContent = d.sums.emotionalD;
+  document.getElementById('sum-latency').innerHTML       = d.sums.latency + '<span style="font-size:14px;font-weight:400;color:var(--muted)">s</span>';
+  document.getElementById('sum-latency-d').textContent   = d.sums.latencyD;
+  document.getElementById('sum-speech').innerHTML        = d.sums.speech + '<span style="font-size:14px;font-weight:400;color:var(--muted)">WPM</span>';
+  document.getElementById('sum-speech-d').textContent    = d.sums.speechD;
+  document.getElementById('sum-pauses').innerHTML        = d.sums.pauses + '<span style="font-size:14px;font-weight:400;color:var(--muted)">회</span>';
+  document.getElementById('sum-pauses-d').textContent    = d.sums.pausesD;
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────
+
+function renderHomeCharts() {
+  const d = CHART_DATA.week;
+  renderChart('home-chart', 'home-chart-labels', d.emotional, {
+    color: '#2563eb', labels: d.labels, min: 60, max: 90
+  });
+}
+
+function renderAnalyticsCharts() {
+  const d = CHART_DATA[currentPeriod];
+  renderChart('chart-emotional', 'chart-emotional-labels', d.emotional,
+    { color: '#2563eb', labels: d.labels, min: 60, max: 90 });
+  renderChart('chart-latency', 'chart-latency-labels', d.latency,
+    { color: '#0891b2', labels: d.labels });
+  renderChart('chart-speech', 'chart-speech-labels', d.speech,
+    { color: '#7c3aed', labels: d.labels });
+  renderChart('chart-pauses', 'chart-pauses-labels', d.pauses,
+    { color: '#d97706', labels: d.labels, min: 0 });
+}
+
+// ─── TABLES ─────────────────────────────────────────────────────
+
+function scoreClass(s) {
+  return s >= 75 ? 'score-green' : s >= 65 ? 'score-amber' : 'score-red';
+}
+function statusBadge(s) {
+  const map = { '정상': 'badge-green', '관심': 'badge-amber', '주의': 'badge-red' };
+  return `<span class="badge ${map[s] || 'badge-blue'}"><span class="dot"></span>${s}</span>`;
+}
+
+function renderRecentCalls() {
+  const tbody = document.getElementById('recent-calls-body');
+  const rows = CALL_HISTORY.slice(0, 5).map(c => `
+    <tr>
+      <td>${c.date}</td>
+      <td class="text-muted">${c.time}</td>
+      <td class="text-muted">${c.dur}</td>
+      <td><span class="score-pill ${scoreClass(c.score)}">${c.score}</span></td>
+      <td class="text-muted">${c.lat}s</td>
+      <td>${statusBadge(c.status)}</td>
+    </tr>`).join('');
+  tbody.innerHTML = rows;
+}
+
+function renderHistory() {
+  const tbody = document.getElementById('history-body');
+  const rows = CALL_HISTORY.map(c => `
+    <tr>
+      <td class="date-col">${c.date}</td>
+      <td>${c.time}</td>
+      <td class="text-muted">${c.dur}</td>
+      <td><span class="score-pill ${scoreClass(c.score)}">${c.score}</span></td>
+      <td class="text-muted">${c.lat}s</td>
+      <td class="text-muted">${c.wpm} WPM</td>
+      <td class="text-muted">${c.pau}회</td>
+      <td>${statusBadge(c.status)}</td>
+      <td>${c.note ? `<span style="font-size:11px;color:var(--muted);max-width:160px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.note}</span>` : ''}</td>
+    </tr>`).join('');
+  tbody.innerHTML = rows;
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+
+window.addEventListener('load', () => {
+  renderHomeCharts();
+  renderRecentCalls();
+  renderHistory();
+});
+
+window.addEventListener('resize', () => {
+  const active = document.querySelector('.tab-panel.active');
+  if (!active) return;
+  if (active.id === 'tab-home')      renderHomeCharts();
+  if (active.id === 'tab-analytics') renderAnalyticsCharts();
+});
+</script>
+</body>
+</html>
