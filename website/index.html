@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareRing — AI 안부 전화 플랫폼</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --accent: #4f8ef7;
+      --accent-dim: #1e3a6e;
+      --green: #22c55e;
+      --green-dim: #14532d;
+      --amber: #f59e0b;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; font-size: 0.875rem; color: var(--muted); }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .nav-cta:hover { background: #3d7ae5; text-decoration: none; }
+
+    /* SECTIONS */
+    section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding-top: 7rem;
+      padding-bottom: 5rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-dim);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.03em;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .btn-primary:hover { background: #3d7ae5; text-decoration: none; }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #222; text-decoration: none; }
+
+    /* STAT BAR */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 3rem auto;
+      max-width: 900px;
+    }
+    .stat {
+      background: var(--surface);
+      padding: 1.75rem 2rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* HOW IT WORKS */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .step {
+      background: var(--surface);
+      padding: 2rem;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .feature {
+      background: var(--surface);
+      padding: 2rem;
+    }
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .feature h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .plan {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+    }
+    .plan.featured {
+      border-color: var(--accent);
+    }
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .plan-name { font-size: 0.85rem; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    .plan-price { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.25rem; }
+    .plan-price span { font-size: 0.9rem; font-weight: 400; color: var(--muted); }
+    .plan-desc { font-size: 0.825rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .plan-features li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+    .plan-features li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+    /* COMPETITIVE */
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .comp-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+    .comp-table td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr.highlight td { background: rgba(79,142,247,0.06); }
+    .comp-table tr.highlight td:first-child { color: var(--accent); font-weight: 700; }
+    .check { color: var(--green); font-weight: 700; }
+    .cross { color: #555; }
+
+    /* TEAM */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .member {
+      background: var(--surface);
+      padding: 2rem;
+    }
+    .member-role { font-size: 0.75rem; color: var(--accent); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; }
+    .member-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .member-bio { font-size: 0.825rem; color: var(--muted); line-height: 1.6; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Care<span>Ring</span></div>
+  <div class="nav-links">
+    <a href="#how">서비스 소개</a>
+    <a href="#features">주요 기능</a>
+    <a href="#pricing">요금제</a>
+    <a href="#team">팀</a>
+  </div>
+  <a href="#pricing" class="nav-cta">시작하기</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">공군창업경진대회 2026</div>
+  <h1>AI가 매일 어르신께 전화하고,<br><em>가족에게 건강 리포트</em>를 보내드립니다.</h1>
+  <p>케어링은 AI가 고령의 부모님께 정기적으로 전화를 드리고, 음성 패턴 분석을 통해 건강 변화를 추적하여 보호자에게 주간 리포트를 제공하는 서비스입니다.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">베타 신청하기</a>
+    <a href="#how" class="btn-secondary">어떻게 동작하나요?</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats" style="max-width:1100px; margin: 0 auto 2rem;">
+  <div class="stat">
+    <div class="stat-value">220만+</div>
+    <div class="stat-label">국내 독거노인 수 (2025)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">3,600건</div>
+    <div class="stat-label">연간 고독사 (보건복지부 2024)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">4.2일</div>
+    <div class="stat-label">발견까지 평균 소요 시간</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">70%+</div>
+    <div class="stat-label">하루 1번 안부 확인으로 예방 가능한 비율</div>
+  </div>
+</div>
+
+<hr class="divider" style="max-width:1100px; margin: 0 auto;" />
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">별도 기기 없이,<br>어르신 기존 전화기로 바로 시작</h2>
+  <p class="section-sub">보호자가 앱에서 설정하면, 나머지는 케어링이 알아서 합니다.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>보호자 설정</h3>
+      <p>통화 주기(매일 / 주 3회), 선호 시간대, 어르신의 관심사를 앱에서 설정합니다.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>AI 발신 통화</h3>
+      <p>설정된 시간에 AI가 어르신께 전화를 겁니다. 기존 휴대폰이나 유선전화로 자연스럽게 대화를 나눕니다.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>음성 건강 분석</h3>
+      <p>응답 속도, 발화 속도, 침묵 빈도, 감정 임베딩 벡터를 분석해 건강 트렌드를 추적합니다.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>주간 리포트 발송</h3>
+      <p>분석 결과를 AI가 자연어로 요약해 보호자에게 주간 리포트를 발송합니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="max-width:1100px; margin: 0 auto;" />
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">가족이 직접 설정하고,<br>가족이 직접 받아보는 리포트</h2>
+  <p class="section-sub">공공 서비스와 달리, 케어링은 처음부터 가족을 위해 설계되었습니다.</p>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">📞</div>
+      <h3>AI 자연어 통화</h3>
+      <p>GPT-4o 기반 한국어 자유 대화. 어르신의 관심사(취미, 가족, 건강 이력)를 반영해 매 통화를 개인화합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <h3>음성 건강 지표 분석</h3>
+      <p>단일 통화가 아닌 30/90일 트렌드 기반으로 응답 지연, 발화 속도, 감정 변화를 측정해 오탐률을 최소화합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📋</div>
+      <h3>주간·월간 보호자 리포트</h3>
+      <p>비전문가도 이해할 수 있는 자연어 요약. 웰니스 지표 기반으로 표현하여 의료기기 규제를 회피합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🚨</div>
+      <h3>응급 키워드 즉시 알림</h3>
+      <p>'넘어졌어', '아파' 등 응급 키워드 감지 시 보호자에게 즉시 푸시 알림을 발송합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📱</div>
+      <h3>어르신 발신 통화 (Premium)</h3>
+      <p>어르신이 언제든 AI에게 먼저 전화할 수 있는 가상번호를 제공합니다. 외로움 해소와 응급 상황 보고가 모두 가능합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">👨‍👩‍👧‍👦</div>
+      <h3>가족 5인 공유</h3>
+      <p>리포트를 최대 5인의 가족 구성원과 공유할 수 있습니다. 형제자매, 배우자 모두 함께 확인하세요.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="max-width:1100px; margin: 0 auto;" />
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">합리적인 가격으로<br>시작하세요</h2>
+  <p class="section-sub">민간 돌봄 매니저 월 30만 원의 1/10 가격으로 AI 안부 전화를 이용할 수 있습니다.</p>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">베이직</div>
+      <div class="plan-price">₩9,900 <span>/ 월</span></div>
+      <div class="plan-desc">처음 시작하는 가족에게 적합합니다.</div>
+      <ul class="plan-features">
+        <li>주 3회 AI 발신 통화</li>
+        <li>주간 텍스트 요약</li>
+        <li>통화 이력 조회</li>
+      </ul>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">가장 인기 있는 플랜</div>
+      <div class="plan-name">스탠다드</div>
+      <div class="plan-price">₩19,900 <span>/ 월</span></div>
+      <div class="plan-desc">매일 안부 확인이 필요한 가족에게.</div>
+      <ul class="plan-features">
+        <li>매일 AI 발신 통화</li>
+        <li>그래프 포함 주간 리포트</li>
+        <li>이상 징후 푸시 알림</li>
+        <li>통화 상세 분석</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="plan-name">프리미엄</div>
+      <div class="plan-price">₩34,900 <span>/ 월</span></div>
+      <div class="plan-desc">완전한 안심을 원하는 가족을 위해.</div>
+      <ul class="plan-features">
+        <li>매일 AI 발신 통화</li>
+        <li>어르신 발신 통화 무제한</li>
+        <li>응급 키워드 즉시 알림</li>
+        <li>월간 PDF 리포트</li>
+        <li>가족 5인 공유</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="max-width:1100px; margin: 0 auto;" />
+
+<!-- COMPETITIVE -->
+<section>
+  <div class="section-label">Why CareRing</div>
+  <h2 class="section-title">기존 서비스와 무엇이<br>다른가요?</h2>
+  <p class="section-sub">케어링은 가족이 직접 설정하고 리포트를 받는 유일한 B2C 서비스입니다.</p>
+  <div style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>서비스</th>
+          <th>B2C 직접 가입</th>
+          <th>가족 리포트</th>
+          <th>개인 설정</th>
+          <th>수신 통화</th>
+          <th>장비 불필요</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>케어링 ✦</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>클로바 케어콜</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>효돌 / 다솜 (로봇)</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td>제한적</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>통신사 안심 서비스</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td>제한적</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider" style="max-width:1100px; margin: 0 auto;" />
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-label">Team</div>
+  <h2 class="section-title">핵심 기술을 직접 개발한<br>팀이 만듭니다</h2>
+  <p class="section-sub">AI, 웹, 보안, 앱 전 영역을 내부에서 실행 가능한 팀입니다.</p>
+  <div class="team-grid">
+    <div class="member">
+      <div class="member-role">팀장 · AI & Architecture</div>
+      <div class="member-name">정의서</div>
+      <div class="member-bio">Carnegie Mellon University 컴퓨터과학 학사. 카타르 국립컴퓨팅 연구소(QCRI) AI 연구원. 화상면접 감정 분석 시스템 직접 개발·출시 이력.</div>
+    </div>
+    <div class="member">
+      <div class="member-role">팀원 · Web Platform</div>
+      <div class="member-name">최지현</div>
+      <div class="member-bio">소프트웨어 엔지니어. 국가 R&D 사업 웹사이트 개발 참여. 공공·국방 개발 환경 경험 보유.</div>
+    </div>
+    <div class="member">
+      <div class="member-role">팀원 · Security Architecture</div>
+      <div class="member-name">조성윤</div>
+      <div class="member-bio">정보보호병 전문 복무. 정보보안기사 자격 보유. 정보보안 기업 근무 경력. 개인정보보호법 준수 설계 담당.</div>
+    </div>
+    <div class="member">
+      <div class="member-role">팀원 · App & Server</div>
+      <div class="member-name">홍준서</div>
+      <div class="member-bio">소프트웨어 엔지니어. 앱·웹·서버 풀스택 경력. 실서비스 운영 경험 보유. 모바일 앱 및 백엔드 인프라 담당.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 CareRing (케어링) — 공군창업경진대회 출품작</p>
+  <p style="margin-top:0.5rem;">"내가 매일 전화드릴 수 없을 때, 케어링이 대신합니다."</p>
+</footer>
+
+</body>
+</html>

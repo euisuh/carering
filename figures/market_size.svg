@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="-apple-system, 'Noto Sans KR', sans-serif">
+  <rect width="800" height="480" fill="#0a0a0a"/>
+
+  <!-- Title -->
+  <text x="400" y="44" text-anchor="middle" font-size="18" font-weight="800" fill="#f0f0f0" letter-spacing="-0.5">시장 규모 분석 (TAM / SAM / SOM)</text>
+  <text x="400" y="66" text-anchor="middle" font-size="12" fill="#666">국내 디지털 돌봄 시장 기준 · 2025</text>
+
+  <!-- TAM circle -->
+  <circle cx="400" cy="270" r="175" fill="#0f1e3d" stroke="#1e3a6e" stroke-width="1.5"/>
+  <!-- SAM circle -->
+  <circle cx="400" cy="270" r="118" fill="#0d2a1e" stroke="#14532d" stroke-width="1.5"/>
+  <!-- SOM circle -->
+  <circle cx="400" cy="270" r="62" fill="#1a1a2e" stroke="#4f8ef7" stroke-width="1.5"/>
+
+  <!-- TAM label -->
+  <text x="400" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7" letter-spacing="0.08em">TAM</text>
+  <text x="400" y="134" text-anchor="middle" font-size="22" font-weight="800" fill="#f0f0f0">₩1.2조</text>
+  <text x="400" y="150" text-anchor="middle" font-size="10" fill="#666">국내 디지털 돌봄 시장 전체</text>
+
+  <!-- SAM label — left callout -->
+  <line x1="307" y1="238" x2="220" y2="210" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="214" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="#22c55e" letter-spacing="0.08em">SAM</text>
+  <text x="214" y="216" text-anchor="middle" font-size="19" font-weight="800" fill="#f0f0f0">₩3,600억</text>
+  <text x="214" y="231" text-anchor="middle" font-size="10" fill="#666">독거 부모 둔 40~60대 가구</text>
+  <text x="214" y="244" text-anchor="middle" font-size="10" fill="#666">약 180만 가구</text>
+
+  <!-- SOM label — right callout -->
+  <line x1="455" y1="290" x2="570" y2="320" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="608" y="310" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b" letter-spacing="0.08em">SOM</text>
+  <text x="608" y="326" text-anchor="middle" font-size="19" font-weight="800" fill="#f0f0f0">₩120억</text>
+  <text x="608" y="341" text-anchor="middle" font-size="10" fill="#666">출시 3년 내 목표</text>
+  <text x="608" y="354" text-anchor="middle" font-size="10" fill="#666">5만 가구 × 월평균 ₩20,000</text>
+
+  <!-- SOM inner label -->
+  <text x="400" y="264" text-anchor="middle" font-size="10" font-weight="700" fill="#4f8ef7">SOM</text>
+  <text x="400" y="278" text-anchor="middle" font-size="13" font-weight="800" fill="#f0f0f0">₩120억</text>
+
+  <!-- Bottom note -->
+  <text x="400" y="452" text-anchor="middle" font-size="10" fill="#444">출처: 통계청, 보건복지부, 국민건강보험공단 (2024–2025)</text>
+
+  <!-- Growth rate badge -->
+  <rect x="316" y="400" width="168" height="28" rx="14" fill="#1a1a1a" stroke="#2a2a2a"/>
+  <text x="400" y="418" text-anchor="middle" font-size="11" fill="#888">디지털 돌봄 시장 연평균 성장률</text>
+  <text x="400" y="432" text-anchor="middle" font-size="11" font-weight="700" fill="#22c55e">+18% CAGR</text>
+</svg>

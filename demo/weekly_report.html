@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing — 주간 건강 리포트</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #161616; --border: #222;
+      --text: #f0f0f0; --muted: #777; --accent: #4f8ef7;
+      --green: #22c55e; --amber: #f59e0b; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+    .page { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+    /* Header */
+    .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .report-meta-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .report-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; }
+    .report-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .report-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.08); color: var(--green); font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 6px; border: 1px solid rgba(34,197,94,0.2); }
+    /* 2x2 chart grid */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .chart-name { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .delta { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+    .delta.up { background: rgba(34,197,94,0.1); color: var(--green); }
+    .delta.down { background: rgba(239,68,68,0.1); color: var(--red); }
+    .delta.flat { background: rgba(255,255,255,0.05); color: var(--muted); }
+    .chart-area { height: 100px; position: relative; }
+    .chart-area svg { width: 100%; height: 100%; }
+    /* AI summary */
+    .ai-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+    .ai-label { display: flex; align-items: center; gap: 0.5rem; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; }
+    .ai-label::before { content: "✦"; font-size: 10px; }
+    .ai-text { font-size: 14px; line-height: 1.8; color: #ccc; }
+    .ai-text strong { color: var(--text); }
+    /* Bar chart helper */
+    .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 80px; padding-top: 8px; }
+    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+    .bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 4px; }
+    .bar-label { font-size: 9px; color: var(--muted); white-space: nowrap; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- Header -->
+  <div class="report-header">
+    <div>
+      <div class="report-meta-label">주간 건강 리포트</div>
+      <div class="report-title">김순자님 · 4월 10일 – 16일</div>
+      <div class="report-sub">총 7회 통화 완료 · 생성일 2026년 4월 16일</div>
+    </div>
+    <div class="report-badge">✓ 전반적으로 양호</div>
+  </div>
+
+  <!-- Charts 2x2 -->
+  <div class="charts-grid">
+
+    <!-- Chart 1: Response Latency -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <span class="chart-name">응답 지연 시간 (초)</span>
+        <span class="delta up">▼ 0.3s 개선</span>
+      </div>
+      <div class="chart-area">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line x1="0" y1="72" x2="280" y2="72" stroke="#1e1e1e" stroke-width="1"/>
+          <line x1="0" y1="36" x2="280" y2="36" stroke="#1e1e1e" stroke-width="1"/>
+          <text x="0" y="70" font-size="9" fill="#333">2.4</text>
+          <text x="0" y="34" font-size="9" fill="#333">1.6</text>
+          <!-- Line: 2.1 2.0 2.2 1.9 1.8 1.7 1.8 -->
+          <path d="M20,52 L60,45 L100,58 L140,38 L180,32 L220,26 L260,32"
+                fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="20" cy="52" r="3" fill="#4f8ef7"/>
+          <circle cx="60" cy="45" r="3" fill="#4f8ef7"/>
+          <circle cx="100" cy="58" r="3" fill="#4f8ef7"/>
+          <circle cx="140" cy="38" r="3" fill="#4f8ef7"/>
+          <circle cx="180" cy="32" r="3" fill="#4f8ef7"/>
+          <circle cx="220" cy="26" r="3" fill="#4f8ef7"/>
+          <circle cx="260" cy="32" r="4" fill="#4f8ef7" stroke="#0a0a0a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--muted); margin-top:4px;">
+        <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span>
+      </div>
+    </div>
+
+    <!-- Chart 2: Speech Rate -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <span class="chart-name">발화 속도 (WPM)</span>
+        <span class="delta flat">— ±2% 안정</span>
+      </div>
+      <div class="chart-area">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line x1="0" y1="72" x2="280" y2="72" stroke="#1e1e1e" stroke-width="1"/>
+          <line x1="0" y1="36" x2="280" y2="36" stroke="#1e1e1e" stroke-width="1"/>
+          <text x="0" y="70" font-size="9" fill="#333">105</text>
+          <text x="0" y="34" font-size="9" fill="#333">118</text>
+          <!-- Line: 108 110 107 115 112 113 112 -->
+          <path d="M20,60 L60,48 L100,64 L140,20 L180,32 L220,28 L260,32"
+                fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="20" cy="60" r="3" fill="#22c55e"/>
+          <circle cx="60" cy="48" r="3" fill="#22c55e"/>
+          <circle cx="100" cy="64" r="3" fill="#22c55e"/>
+          <circle cx="140" cy="20" r="3" fill="#22c55e"/>
+          <circle cx="180" cy="32" r="3" fill="#22c55e"/>
+          <circle cx="220" cy="28" r="3" fill="#22c55e"/>
+          <circle cx="260" cy="32" r="4" fill="#22c55e" stroke="#0a0a0a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--muted); margin-top:4px;">
+        <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span>
+      </div>
+    </div>
+
+    <!-- Chart 3: Pause Frequency -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <span class="chart-name">침묵 빈도 (회/통화)</span>
+        <span class="delta down">▲ 1.2회 증가</span>
+      </div>
+      <div class="chart-area">
+        <div class="bar-chart">
+          <div class="bar-wrap"><div class="bar" style="height:40%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">월</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:50%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">화</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:35%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">수</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:65%; background:#f59e0b; opacity:.85"></div><span class="bar-label">목</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:55%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">금</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:45%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">토</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:50%; background:#4f8ef7; opacity:.7"></div><span class="bar-label">일</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 4: Emotional Score -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <span class="chart-name">감정 점수 (/100)</span>
+        <span class="delta up">▲ 4pt 상승</span>
+      </div>
+      <div class="chart-area">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4f8ef7" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#4f8ef7" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="72" x2="280" y2="72" stroke="#1e1e1e" stroke-width="1"/>
+          <line x1="0" y1="36" x2="280" y2="36" stroke="#1e1e1e" stroke-width="1"/>
+          <text x="0" y="70" font-size="9" fill="#333">70</text>
+          <text x="0" y="34" font-size="9" fill="#333">83</text>
+          <!-- Area: 74 76 73 83 78 77 78 -->
+          <path d="M20,64 L60,55 L100,68 L140,18 L180,38 L220,44 L260,38 L260,72 L20,72 Z" fill="url(#eg)"/>
+          <path d="M20,64 L60,55 L100,68 L140,18 L180,38 L220,44 L260,38"
+                fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Peak dot labeled -->
+          <circle cx="140" cy="18" r="5" fill="#4f8ef7" stroke="#0a0a0a" stroke-width="2"/>
+          <text x="148" y="14" font-size="9" font-weight="700" fill="#4f8ef7">83</text>
+          <circle cx="260" cy="38" r="4" fill="#4f8ef7" stroke="#0a0a0a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--muted); margin-top:4px;">
+        <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Summary -->
+  <div class="ai-summary">
+    <div class="ai-label">AI 분석 요약</div>
+    <div class="ai-text">
+      이번 주 순자님의 통화 패턴은 <strong>전반적으로 안정적</strong>이었습니다.
+      응답 속도와 발화 속도 모두 정상 범위를 유지하였으며, 감정 점수는 주간 평균 <strong>77점</strong>으로
+      지난 주 대비 <strong>4점 상승</strong>하여 긍정적인 변화를 보였습니다.
+      특히 <strong>목요일 통화</strong>에서 감정 점수가 주간 최고치(83점)를 기록하며,
+      활발한 대화와 밝은 목소리가 관찰되었습니다.
+      침묵 빈도는 목요일에 소폭 상승하였으나, 주간 평균 범위 내에 있어
+      특이 사항으로 보기 어렵습니다.
+      <strong>다음 주에도 현재 상태가 유지될 것으로 예상</strong>됩니다.
+    </div>
+  </div>
+</div>
+</body>
+</html>

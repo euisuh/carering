@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing — 긴급 알림</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --border: #222;
+      --text: #f0f0f0; --muted: #777;
+      --red: #ef4444; --red-bg: rgba(239,68,68,0.08); --red-border: rgba(239,68,68,0.25);
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+    .page { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
+    /* Logo bar */
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .logo { font-size: 1rem; font-weight: 800; }
+    .logo span { color: #ef4444; }
+    .time-label { font-size: 12px; color: var(--muted); }
+    /* Alert banner */
+    .alert-banner { background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .alert-icon { font-size: 2rem; flex-shrink: 0; }
+    .alert-title { font-size: 1.1rem; font-weight: 800; color: var(--red); letter-spacing: -0.02em; }
+    .alert-sub { font-size: 12px; color: #f88; margin-top: 3px; }
+    /* Meta row */
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem; }
+    .meta-item { background: var(--surface); padding: 1rem 1.25rem; }
+    .meta-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .meta-value { font-size: 13px; font-weight: 700; }
+    /* Transcript */
+    .transcript-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+    .transcript-title { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; }
+    .transcript-line { font-size: 13px; line-height: 1.7; color: #aaa; margin-bottom: 0.5rem; }
+    .transcript-line.highlight-line { background: rgba(239,68,68,0.06); border-radius: 6px; padding: 0.4rem 0.75rem; margin: 0.25rem -0.25rem 0.5rem; }
+    .transcript-line span.speaker { font-weight: 700; color: var(--text); margin-right: 0.4rem; }
+    .keyword { background: rgba(239,68,68,0.2); color: var(--red); font-weight: 700; padding: 1px 4px; border-radius: 3px; }
+    /* CTA buttons */
+    .btn-call { width: 100%; background: var(--red); color: #fff; padding: 1rem; border-radius: 10px; font-size: 1rem; font-weight: 800; text-align: center; margin-bottom: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-call:hover { background: #dc2626; }
+    .btn-listen { width: 100%; background: var(--surface); color: var(--text); padding: 0.875rem; border-radius: 10px; font-size: 0.9rem; font-weight: 700; text-align: center; border: 1px solid var(--border); margin-bottom: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-listen:hover { background: #1a1a1a; }
+    .btn-dismiss { width: 100%; text-align: center; font-size: 12px; color: #555; padding: 0.5rem; cursor: pointer; }
+    .btn-dismiss:hover { color: var(--muted); }
+    /* Pulse animation */
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .pulse { animation: pulse 1.5s infinite; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="logo">Care<span>Ring</span></div>
+    <div class="time-label">2026년 4월 16일 오전 10:31</div>
+  </div>
+
+  <!-- Alert banner -->
+  <div class="alert-banner">
+    <div class="alert-icon pulse">🚨</div>
+    <div>
+      <div class="alert-title">긴급 상황이 감지되었습니다</div>
+      <div class="alert-sub">김순자님과의 통화 중 응급 키워드가 감지되었습니다</div>
+    </div>
+  </div>
+
+  <!-- Meta -->
+  <div class="meta-grid">
+    <div class="meta-item">
+      <div class="meta-label">통화 일시</div>
+      <div class="meta-value">오늘 10:24</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">감지 시점</div>
+      <div class="meta-value" style="color:var(--red)">6분 14초</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">감지된 키워드</div>
+      <div class="meta-value" style="color:var(--red)">넘어졌어</div>
+    </div>
+  </div>
+
+  <!-- Transcript -->
+  <div class="transcript-card">
+    <div class="transcript-title">통화 내용 발췌 (감지 전후)</div>
+    <div class="transcript-line">
+      <span class="speaker">AI</span>"오늘 오전에는 좀 어떠세요, 순자님? 어제보다 나아지셨나요?"
+    </div>
+    <div class="transcript-line">
+      <span class="speaker">순자님</span>"응, 그냥 그래. 아침에 일어나려다가…"
+    </div>
+    <div class="transcript-line highlight-line">
+      <span class="speaker">순자님</span>"<span class="keyword">넘어졌어</span>. 욕실에서. 지금 바닥에 있어."
+    </div>
+    <div class="transcript-line">
+      <span class="speaker">AI</span>"순자님, 지금 다치신 곳이 있으세요? 잠시만요, 보호자분께 바로 연락드릴게요."
+    </div>
+  </div>
+
+  <!-- CTA Buttons -->
+  <div class="btn-call">📞 지금 전화하기</div>
+  <div class="btn-listen">🔊 녹음 듣기</div>
+  <div class="btn-dismiss">오탐으로 처리하기</div>
+</div>
+</body>
+</html>

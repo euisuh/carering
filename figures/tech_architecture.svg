@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 500" font-family="-apple-system, 'Noto Sans KR', sans-serif">
+  <rect width="860" height="500" fill="#0a0a0a"/>
+
+  <!-- Title -->
+  <text x="430" y="38" text-anchor="middle" font-size="17" font-weight="800" fill="#f0f0f0" letter-spacing="-0.5">기술 아키텍처</text>
+  <text x="430" y="57" text-anchor="middle" font-size="11" fill="#555">AI Call Engine · Voice Analysis Pipeline · Guardian Platform</text>
+
+  <!-- ========== LAYER 1: Client Layer ========== -->
+  <text x="60" y="90" font-size="10" font-weight="700" fill="#666" letter-spacing="0.08em">CLIENT LAYER</text>
+
+  <!-- Guardian App (iOS/Android) -->
+  <rect x="50" y="100" width="160" height="72" rx="8" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
+  <text x="130" y="124" text-anchor="middle" font-size="18">📱</text>
+  <text x="130" y="143" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">보호자 앱</text>
+  <text x="130" y="158" text-anchor="middle" font-size="9" fill="#666">iOS / Android</text>
+
+  <!-- Web Dashboard -->
+  <rect x="228" y="100" width="160" height="72" rx="8" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
+  <text x="308" y="124" text-anchor="middle" font-size="18">🖥️</text>
+  <text x="308" y="143" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">웹 대시보드</text>
+  <text x="308" y="158" text-anchor="middle" font-size="9" fill="#666">React · Next.js</text>
+
+  <!-- Elder's phone -->
+  <rect x="406" y="100" width="160" height="72" rx="8" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
+  <text x="486" y="124" text-anchor="middle" font-size="18">☎️</text>
+  <text x="486" y="143" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">어르신 전화기</text>
+  <text x="486" y="158" text-anchor="middle" font-size="9" fill="#666">기존 전화기 (앱 불필요)</text>
+
+  <!-- ========== Arrows down ========== -->
+  <line x1="130" y1="172" x2="130" y2="210" stroke="#2a2a2a" stroke-width="1.5"/>
+  <polygon points="125,208 130,216 135,208" fill="#444"/>
+  <line x1="308" y1="172" x2="308" y2="210" stroke="#2a2a2a" stroke-width="1.5"/>
+  <polygon points="303,208 308,216 313,208" fill="#444"/>
+  <line x1="486" y1="172" x2="486" y2="210" stroke="#2a2a2a" stroke-width="1.5"/>
+  <polygon points="481,208 486,216 491,208" fill="#444"/>
+
+  <!-- ========== LAYER 2: Backend / Core API ========== -->
+  <text x="60" y="234" font-size="10" font-weight="700" fill="#666" letter-spacing="0.08em">BACKEND / CORE API</text>
+
+  <!-- API Gateway -->
+  <rect x="50" y="244" width="160" height="72" rx="8" fill="#111" stroke="#1e3a6e" stroke-width="1.5"/>
+  <text x="130" y="268" text-anchor="middle" font-size="18">🔀</text>
+  <text x="130" y="287" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7">API Gateway</text>
+  <text x="130" y="302" text-anchor="middle" font-size="9" fill="#666">Auth · Rate Limit</text>
+
+  <!-- AI Call Engine -->
+  <rect x="228" y="244" width="160" height="72" rx="8" fill="#111" stroke="#1e3a6e" stroke-width="1.5"/>
+  <text x="308" y="268" text-anchor="middle" font-size="18">🤖</text>
+  <text x="308" y="287" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7">AI 통화 엔진</text>
+  <text x="308" y="302" text-anchor="middle" font-size="9" fill="#666">GPT-4o · TTS/STT</text>
+
+  <!-- Telephony -->
+  <rect x="406" y="244" width="160" height="72" rx="8" fill="#111" stroke="#1e3a6e" stroke-width="1.5"/>
+  <text x="486" y="268" text-anchor="middle" font-size="18">📡</text>
+  <text x="486" y="287" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7">Telephony Layer</text>
+  <text x="486" y="302" text-anchor="middle" font-size="9" fill="#666">PSTN Bridge · 가상번호</text>
+
+  <!-- Report Gen -->
+  <rect x="584" y="244" width="160" height="72" rx="8" fill="#111" stroke="#1e3a6e" stroke-width="1.5"/>
+  <text x="664" y="268" text-anchor="middle" font-size="18">📝</text>
+  <text x="664" y="287" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7">리포트 생성기</text>
+  <text x="664" y="302" text-anchor="middle" font-size="9" fill="#666">LLM 자연어 요약</text>
+
+  <!-- ========== Arrows down ========== -->
+  <line x1="308" y1="316" x2="308" y2="352" stroke="#2a2a2a" stroke-width="1.5"/>
+  <polygon points="303,350 308,358 313,350" fill="#444"/>
+  <line x1="486" y1="316" x2="486" y2="352" stroke="#2a2a2a" stroke-width="1.5"/>
+  <polygon points="481,350 486,358 491,350" fill="#444"/>
+
+  <!-- ========== LAYER 3: AI / Data Layer ========== -->
+  <text x="60" y="376" font-size="10" font-weight="700" fill="#666" letter-spacing="0.08em">AI / DATA LAYER</text>
+
+  <!-- Voice Analysis -->
+  <rect x="228" y="386" width="160" height="72" rx="8" fill="#111" stroke="#422006" stroke-width="1.5"/>
+  <text x="308" y="410" text-anchor="middle" font-size="18">🔬</text>
+  <text x="308" y="429" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">음성 분석 파이프라인</text>
+  <text x="308" y="444" text-anchor="middle" font-size="9" fill="#666">SER · WPM · Pause · Latency</text>
+
+  <!-- DB -->
+  <rect x="406" y="386" width="160" height="72" rx="8" fill="#111" stroke="#422006" stroke-width="1.5"/>
+  <text x="486" y="410" text-anchor="middle" font-size="18">🗄️</text>
+  <text x="486" y="429" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">데이터 저장소</text>
+  <text x="486" y="444" text-anchor="middle" font-size="9" fill="#666">암호화 · 30/90일 트렌드 DB</text>
+
+  <!-- Security badge -->
+  <rect x="620" y="386" width="180" height="72" rx="8" fill="#111" stroke="#14532d" stroke-width="1.5"/>
+  <text x="710" y="410" text-anchor="middle" font-size="18">🔒</text>
+  <text x="710" y="429" text-anchor="middle" font-size="11" font-weight="700" fill="#22c55e">보안 레이어</text>
+  <text x="710" y="444" text-anchor="middle" font-size="9" fill="#666">E2E 암호화 · 개인정보보호법</text>
+
+  <!-- ========== Horizontal connector backbone ========== -->
+  <line x1="210" y1="280" x2="228" y2="280" stroke="#1e3a6e" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="388" y1="280" x2="406" y2="280" stroke="#1e3a6e" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="566" y1="280" x2="584" y2="280" stroke="#1e3a6e" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="388" y1="422" x2="406" y2="422" stroke="#422006" stroke-width="1" stroke-dasharray="3,3"/>
+</svg>
