@@ -64,7 +64,7 @@
   <text x="783" y="224" text-anchor="middle" font-size="10" fill="#666">이상 징후 즉시 알림</text>
 
   <!-- Bottom: 30/90 day note -->
-  <rect x="280" y="265" width="340" height="46" rx="8" fill="#111" stroke="#2a2a2a"/>
+  <rect x="60" y="265" width="780" height="46" rx="8" fill="#111" stroke="#2a2a2a"/>
   <text x="450" y="285" text-anchor="middle" font-size="10" font-weight="700" fill="#f0f0f0">30 / 90일 트렌드 기반 분석</text>
   <text x="450" y="300" text-anchor="middle" font-size="10" fill="#666">단일 통화가 아닌 장기 데이터 누적으로 오탐률 최소화 — 이용 기간이 길수록 정확도 향상</text>
 </svg>

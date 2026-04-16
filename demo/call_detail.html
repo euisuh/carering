@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing — 통화 상세</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #161616; --border: #222;
+      --text: #f0f0f0; --muted: #777; --accent: #4f8ef7;
+      --green: #22c55e; --amber: #f59e0b;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+    .shell { display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 1.25rem 0; flex-shrink: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 0 1.25rem 1.25rem; font-size: 1rem; font-weight: 800; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+    .sidebar-logo span { color: var(--accent); }
+    .sidebar-section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #444; padding: 0 1.25rem; margin: 0.75rem 0 0.25rem; text-transform: uppercase; }
+    .sidebar-item { padding: 0.5rem 1.25rem; font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .sidebar-item.active { background: rgba(79,142,247,0.1); color: var(--accent); border-right: 2px solid var(--accent); }
+    .sidebar-item:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
+    .sidebar-bottom { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+    .plan-badge { display: inline-block; background: rgba(79,142,247,0.15); color: var(--accent); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 0.4rem; }
+    .main { flex: 1; overflow-y: auto; }
+    .topbar { height: 52px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; background: var(--surface); position: sticky; top: 0; z-index: 10; }
+    .topbar-title { font-size: 13px; font-weight: 600; }
+    .topbar-back { font-size: 12px; color: var(--accent); cursor: pointer; text-decoration: none; }
+    .topbar-back:hover { text-decoration: underline; }
+    .content { padding: 1.75rem; max-width: 900px; }
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.03em; }
+    .page-header .sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    /* Top metrics bar */
+    .metrics-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
+    .metric { background: var(--surface); padding: 1.1rem 1.25rem; }
+    .metric-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .metric-value { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.04em; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+    .card-title { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; }
+    /* Waveform */
+    .waveform { display: flex; align-items: center; gap: 2px; height: 60px; padding: 4px 0; }
+    .wave-bar { flex: 1; border-radius: 2px; background: #4f8ef7; opacity: 0.5; min-height: 4px; }
+    .wave-bar.peak { opacity: 0.9; }
+    .wave-annotation { position: relative; }
+    .annotation-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--amber); border: 2px solid #0a0a0a; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); }
+    .annotation-label { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); background: rgba(245,158,11,0.15); color: var(--amber); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+    /* Transcript */
+    .transcript { display: flex; flex-direction: column; gap: 0.75rem; }
+    .t-row { display: flex; gap: 0.75rem; }
+    .t-speaker { font-size: 11px; font-weight: 700; min-width: 60px; padding-top: 2px; }
+    .t-speaker.ai { color: var(--accent); }
+    .t-speaker.elder { color: var(--green); }
+    .t-bubble { background: var(--surface2); border-radius: 8px; padding: 0.6rem 0.875rem; font-size: 13px; color: #ccc; line-height: 1.5; flex: 1; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="sidebar-logo">Care<span>Ring</span></div>
+    <div class="sidebar-section">Overview</div>
+    <a href="dashboard.html" class="sidebar-item">📊 대시보드</a>
+    <a href="weekly_report.html" class="sidebar-item">📋 주간 리포트</a>
+    <a href="trend_overview.html" class="sidebar-item">📈 30일 트렌드</a>
+    <div class="sidebar-section">Details</div>
+    <a href="call_detail.html" class="sidebar-item active">📞 통화 내역</a>
+    <a href="emergency_alert.html" class="sidebar-item">🚨 알림</a>
+    <div class="sidebar-section">Settings</div>
+    <a href="call_settings.html" class="sidebar-item">⚙️ 통화 설정</a>
+    <div class="sidebar-bottom">
+      <div class="plan-badge">스탠다드</div>
+      <div style="font-size:11px; color: var(--muted);">다음 갱신일<br><span style="color:var(--text)">2026년 5월 16일</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">통화 상세 — 4월 13일</div>
+      <a href="dashboard.html" class="topbar-back">← 대시보드로</a>
+    </div>
+    <div class="content">
+      <div class="page-header">
+        <h1>김순자님 · 4월 13일 오전 10:24</h1>
+        <div class="sub">통화 완료 · 8분 42초 · 정상</div>
+      </div>
+
+      <!-- Metrics bar -->
+      <div class="metrics-bar">
+        <div class="metric">
+          <div class="metric-label">통화 시간</div>
+          <div class="metric-value">8<span style="font-size:1rem;font-weight:400;color:var(--muted)">m</span> 42<span style="font-size:1rem;font-weight:400;color:var(--muted)">s</span></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">평균 응답 지연</div>
+          <div class="metric-value">1.9<span style="font-size:1rem;font-weight:400;color:var(--muted)">s</span></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">발화 속도</div>
+          <div class="metric-value">108<span style="font-size:1rem;font-weight:400;color:var(--muted)"> WPM</span></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">감정 점수</div>
+          <div class="metric-value" style="color:var(--green)">81<span style="font-size:1rem;font-weight:400;color:var(--muted)">/100</span></div>
+        </div>
+      </div>
+
+      <!-- Emotional arc chart -->
+      <div class="card">
+        <div class="card-title">감정 흐름 (통화 전 구간)</div>
+        <div style="height:100px; position:relative;">
+          <svg viewBox="0 0 520 90" preserveAspectRatio="none" style="width:100%;height:100%;">
+            <defs>
+              <linearGradient id="arcg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4f8ef7" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#4f8ef7" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="70" x2="520" y2="70" stroke="#1e1e1e" stroke-width="1"/>
+            <line x1="0" y1="40" x2="520" y2="40" stroke="#1e1e1e" stroke-width="1"/>
+            <line x1="0" y1="10" x2="520" y2="10" stroke="#1e1e1e" stroke-width="1"/>
+            <text x="0" y="72" font-size="9" fill="#333">60</text>
+            <text x="0" y="42" font-size="9" fill="#333">75</text>
+            <text x="0" y="12" font-size="9" fill="#333">90</text>
+            <!-- Arc: starts 72, rises to 85 at ~4min, settles at 78 -->
+            <path d="M30,58 L90,52 L150,44 L210,36 L260,18 L310,28 L370,36 L430,38 L490,34 L490,70 L30,70 Z" fill="url(#arcg)"/>
+            <path d="M30,58 L90,52 L150,44 L210,36 L260,18 L310,28 L370,36 L430,38 L490,34"
+                  fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Peak dot -->
+            <circle cx="260" cy="18" r="5" fill="#4f8ef7" stroke="#0a0a0a" stroke-width="2"/>
+            <text x="270" y="14" font-size="9" font-weight="700" fill="#4f8ef7">85</text>
+            <text x="262" y="32" font-size="8" fill="#555">4:10</text>
+          </svg>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:4px;">
+          <span>0:00</span><span>2:00</span><span>4:00</span><span>6:00</span><span>8:42</span>
+        </div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="card">
+        <div class="card-title">음성 파형 주요 구간</div>
+        <div style="position:relative; padding-top:24px;">
+          <!-- Annotations -->
+          <div style="position:absolute; top:0; left:15%; font-size:9px; font-weight:700; color:var(--green); background:rgba(34,197,94,0.1); padding:2px 6px; border-radius:4px;">2:10 — 밝은 목소리</div>
+          <div style="position:absolute; top:0; left:52%; font-size:9px; font-weight:700; color:var(--amber); background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px;">5:30 — 약간 피로감</div>
+          <div style="position:absolute; top:0; left:82%; font-size:9px; font-weight:700; color:var(--green); background:rgba(34,197,94,0.1); padding:2px 6px; border-radius:4px;">7:45 — 웃음</div>
+          <!-- Waveform bars -->
+          <div class="waveform">
+            <div class="wave-bar" style="height:20%"></div><div class="wave-bar" style="height:35%"></div><div class="wave-bar" style="height:45%"></div><div class="wave-bar" style="height:55%"></div><div class="wave-bar" style="height:60%"></div><div class="wave-bar" style="height:70%"></div><div class="wave-bar peak" style="height:80%"></div><div class="wave-bar peak" style="height:90%"></div><div class="wave-bar peak" style="height:85%"></div><div class="wave-bar" style="height:75%"></div><div class="wave-bar" style="height:65%"></div><div class="wave-bar" style="height:50%"></div><div class="wave-bar" style="height:40%"></div><div class="wave-bar" style="height:30%"></div><div class="wave-bar" style="height:35%"></div><div class="wave-bar" style="height:45%"></div><div class="wave-bar" style="height:55%"></div><div class="wave-bar" style="height:60%"></div><div class="wave-bar" style="height:50%"></div><div class="wave-bar" style="height:40%"></div><div class="wave-bar" style="height:35%"></div><div class="wave-bar" style="height:30%"></div><div class="wave-bar" style="height:55%"></div><div class="wave-bar peak" style="height:70%"></div><div class="wave-bar peak" style="height:75%"></div><div class="wave-bar peak" style="height:65%"></div><div class="wave-bar" style="height:50%"></div><div class="wave-bar" style="height:40%"></div><div class="wave-bar" style="height:35%"></div><div class="wave-bar" style="height:30%"></div><div class="wave-bar" style="height:45%"></div><div class="wave-bar" style="height:60%"></div><div class="wave-bar peak" style="height:80%"></div><div class="wave-bar peak" style="height:85%"></div><div class="wave-bar peak" style="height:90%"></div><div class="wave-bar peak" style="height:88%"></div><div class="wave-bar" style="height:72%"></div><div class="wave-bar" style="height:55%"></div><div class="wave-bar" style="height:40%"></div><div class="wave-bar" style="height:30%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transcript -->
+      <div class="card">
+        <div class="card-title">통화 내용 발췌</div>
+        <div class="transcript">
+          <div class="t-row">
+            <span class="t-speaker ai">AI</span>
+            <div class="t-bubble">"오늘 아침에 밥은 드셨어요, 순자님?"</div>
+          </div>
+          <div class="t-row">
+            <span class="t-speaker elder">순자님</span>
+            <div class="t-bubble">"응, 죽 한 그릇 먹었어. 입맛이 별로 없어서."</div>
+          </div>
+          <div class="t-row">
+            <span class="t-speaker ai">AI</span>
+            <div class="t-bubble">"그러셨군요. 요즘 날씨가 더워서 그런가 봐요. 뜨개질은 요즘도 하고 계세요?"</div>
+          </div>
+          <div class="t-row">
+            <span class="t-speaker elder">순자님</span>
+            <div class="t-bubble">"응, 손녀 것 만들고 있어. 거의 다 됐어." <span style="font-size:11px; color:var(--green);">😊</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

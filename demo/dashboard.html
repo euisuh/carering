@@ -20,7 +20,7 @@
     .sidebar-logo { padding: 0 1.25rem 1.25rem; font-size: 1rem; font-weight: 800; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
     .sidebar-logo span { color: var(--accent); }
     .sidebar-section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #444; padding: 0 1.25rem; margin: 0.75rem 0 0.25rem; text-transform: uppercase; }
-    .sidebar-item { padding: 0.5rem 1.25rem; font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 0.6rem; border-radius: 0; }
+    .sidebar-item { padding: 0.5rem 1.25rem; font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 0.6rem; border-radius: 0; text-decoration: none; }
     .sidebar-item.active { background: rgba(79,142,247,0.1); color: var(--accent); border-right: 2px solid var(--accent); }
     .sidebar-item:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
     .sidebar-bottom { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
@@ -80,18 +80,18 @@
   <div class="sidebar">
     <div class="sidebar-logo">Care<span>Ring</span></div>
     <div class="sidebar-section">Overview</div>
-    <div class="sidebar-item active">📊 대시보드</div>
-    <div class="sidebar-item">📋 주간 리포트</div>
-    <div class="sidebar-item">📈 30일 트렌드</div>
+    <a href="dashboard.html" class="sidebar-item active">📊 대시보드</a>
+    <a href="weekly_report.html" class="sidebar-item">📋 주간 리포트</a>
+    <a href="trend_overview.html" class="sidebar-item">📈 30일 트렌드</a>
     <div class="sidebar-section">Details</div>
-    <div class="sidebar-item">📞 통화 내역</div>
-    <div class="sidebar-item">🚨 알림</div>
+    <a href="call_detail.html" class="sidebar-item">📞 통화 내역</a>
+    <a href="emergency_alert.html" class="sidebar-item">🚨 알림</a>
     <div class="sidebar-section">Settings</div>
-    <div class="sidebar-item">⚙️ 통화 설정</div>
-    <div class="sidebar-item">👤 계정</div>
+    <a href="call_settings.html" class="sidebar-item">⚙️ 통화 설정</a>
     <div class="sidebar-bottom">
       <div class="plan-badge">스탠다드</div>
-      <div style="font-size:11px; color: var(--muted);">다음 갱신일<br><span style="color:var(--text)">2026년 5월 16일</span></div>
+      <div style="font-size:11px; color: var(--muted); margin-bottom:0.75rem;">다음 갱신일<br><span style="color:var(--text)">2026년 5월 16일</span></div>
+      <a href="dashboard-light.html" style="font-size:11px; color:var(--accent); text-decoration:none;">☀ 라이트 모드로 보기</a>
     </div>
   </div>
 

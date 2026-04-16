@@ -12,6 +12,12 @@
       --red: #ef4444; --red-bg: rgba(239,68,68,0.08); --red-border: rgba(239,68,68,0.25);
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+    .topnav { height: 52px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 2rem; gap: 1.5rem; }
+    .topnav-logo { font-size: 0.95rem; font-weight: 800; margin-right: auto; }
+    .topnav-logo span { color: var(--red); }
+    .topnav a { font-size: 12px; color: var(--muted); text-decoration: none; }
+    .topnav a:hover { color: var(--text); }
+    .topnav a.active { color: var(--red); font-weight: 600; }
     .page { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
     /* Logo bar */
     .topbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
@@ -48,6 +54,14 @@
   </style>
 </head>
 <body>
+<nav class="topnav">
+  <div class="topnav-logo">Care<span>Ring</span></div>
+  <a href="dashboard.html">대시보드</a>
+  <a href="weekly_report.html">주간 리포트</a>
+  <a href="emergency_alert.html" class="active">긴급 알림</a>
+  <a href="call_settings.html">설정</a>
+  <a href="index.html" style="margin-left:auto; color:#ef4444;">← 데모 홈</a>
+</nav>
 <div class="page">
   <!-- Top bar -->
   <div class="topbar">

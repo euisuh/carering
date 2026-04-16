@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing — 데모</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #161616; --border: #222;
+      --text: #f0f0f0; --muted: #666; --accent: #4f8ef7;
+      --green: #22c55e; --amber: #f59e0b; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    nav { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 2rem; gap: 1rem; background: var(--surface); }
+    .nav-logo { font-size: 1rem; font-weight: 800; margin-right: auto; }
+    .nav-logo span { color: var(--accent); }
+    .nav-badge { background: rgba(79,142,247,0.12); color: var(--accent); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(79,142,247,0.2); }
+    .page { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+    .hero { text-align: center; margin-bottom: 3.5rem; }
+    .hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p { font-size: 14px; color: var(--muted); max-width: 480px; margin: 0 auto; line-height: 1.7; }
+    /* Screen grid */
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #444; margin-bottom: 1rem; }
+    .screen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+    .screen-card { background: var(--surface); padding: 1.5rem; text-decoration: none; display: block; transition: background 0.1s; }
+    .screen-card:hover { background: #161616; }
+    .screen-icon { font-size: 1.6rem; margin-bottom: 0.875rem; }
+    .screen-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .screen-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .screen-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 0.75rem; }
+    .tag-core { background: rgba(79,142,247,0.1); color: var(--accent); }
+    .tag-detail { background: rgba(34,197,94,0.08); color: var(--green); }
+    .tag-alert { background: rgba(239,68,68,0.08); color: var(--red); }
+    .tag-setting { background: rgba(255,255,255,0.06); color: var(--muted); }
+    /* Footer note */
+    .footer-note { text-align: center; font-size: 12px; color: #333; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">Care<span>Ring</span></div>
+    <div class="nav-badge">보호자 앱 데모</div>
+  </nav>
+
+  <div class="page">
+    <div class="hero">
+      <h1>케어링 <em>보호자 앱</em> 데모</h1>
+      <p>AI 안부 전화 플랫폼 CareRing의 보호자용 대시보드 데모 화면입니다. 아래에서 각 화면을 직접 확인해보세요.</p>
+    </div>
+
+    <div class="section-label">주요 화면</div>
+    <div class="screen-grid">
+      <a href="dashboard.html" class="screen-card">
+        <div class="screen-icon">📊</div>
+        <div class="screen-name">보호자 대시보드</div>
+        <div class="screen-desc">건강 상태 요약, 통화 스트릭, 4개 핵심 지표, 14일 감정 트렌드, 최근 통화 내역.</div>
+        <div class="screen-tag tag-core">메인 화면</div>
+      </a>
+      <a href="weekly_report.html" class="screen-card">
+        <div class="screen-icon">📋</div>
+        <div class="screen-name">주간 건강 리포트</div>
+        <div class="screen-desc">4개 건강 지표의 7일 차트와 전주 대비 변화, AI 자연어 요약 보고서.</div>
+        <div class="screen-tag tag-core">핵심 기능</div>
+      </a>
+      <a href="trend_overview.html" class="screen-card">
+        <div class="screen-icon">📈</div>
+        <div class="screen-name">30일 트렌드 개요</div>
+        <div class="screen-desc">4주 통화 완료율, 주간 평균 지표 추이, 주목 구간 자동 하이라이트.</div>
+        <div class="screen-tag tag-detail">장기 추이</div>
+      </a>
+      <a href="call_detail.html" class="screen-card">
+        <div class="screen-icon">📞</div>
+        <div class="screen-name">통화 상세</div>
+        <div class="screen-desc">단일 통화의 감정 흐름 차트, 음성 파형 주요 구간 주석, 대화 발췌.</div>
+        <div class="screen-tag tag-detail">드릴다운</div>
+      </a>
+      <a href="emergency_alert.html" class="screen-card">
+        <div class="screen-icon">🚨</div>
+        <div class="screen-name">긴급 알림</div>
+        <div class="screen-desc">응급 키워드 감지 시 전체 화면 알림, 트리거 대화 발췌, 즉시 전화 연결 CTA.</div>
+        <div class="screen-tag tag-alert">긴급 상황</div>
+      </a>
+      <a href="call_settings.html" class="screen-card">
+        <div class="screen-icon">⚙️</div>
+        <div class="screen-name">통화 설정</div>
+        <div class="screen-desc">통화 주기·시간대 설정, 어르신 프로필, 관심사 태그, 건강 메모 관리.</div>
+        <div class="screen-tag tag-setting">설정</div>
+      </a>
+    </div>
+
+    <div class="section-label" style="margin-top:1rem;">테마 비교</div>
+    <div class="screen-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:2rem;">
+      <a href="dashboard.html" class="screen-card">
+        <div class="screen-icon">🌙</div>
+        <div class="screen-name">다크 모드</div>
+        <div class="screen-desc">현재 기본 테마. 어두운 배경에 데이터 중심 레이아웃.</div>
+      </a>
+      <a href="dashboard-light.html" class="screen-card">
+        <div class="screen-icon">☀️</div>
+        <div class="screen-name">라이트 모드</div>
+        <div class="screen-desc">밝은 배경 테마. 동일한 데이터 구조, 다른 분위기.</div>
+      </a>
+    </div>
+
+    <div class="footer-note">
+      CareRing (케어링) — 공군창업경진대회 2026 출품작<br>
+      "내가 매일 전화드릴 수 없을 때, 케어링이 대신합니다."
+    </div>
+  </div>
+</body>
+</html>

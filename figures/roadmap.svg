@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" font-family="-apple-system, 'Noto Sans KR', sans-serif">
+  <rect width="900" height="400" fill="#0a0a0a"/>
+
+  <!-- Title -->
+  <text x="450" y="38" text-anchor="middle" font-size="17" font-weight="800" fill="#f0f0f0" letter-spacing="-0.5">사업 로드맵</text>
+  <text x="450" y="57" text-anchor="middle" font-size="11" fill="#555">MVP 개발 → 정식 출시 → B2B 확장 → 글로벌 진출</text>
+
+  <!-- Timeline spine -->
+  <line x1="80" y1="180" x2="820" y2="180" stroke="#222" stroke-width="2"/>
+
+  <!-- Phase 1: 0-6 months -->
+  <!-- Connector line up -->
+  <line x1="140" y1="180" x2="140" y2="120" stroke="#4f8ef7" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="140" cy="180" r="7" fill="#4f8ef7" stroke="#0a0a0a" stroke-width="2"/>
+  <rect x="60" y="68" width="162" height="52" rx="7" fill="#111" stroke="#1e3a6e" stroke-width="1.5"/>
+  <text x="141" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#4f8ef7" letter-spacing="0.06em">0 – 6개월</text>
+  <text x="141" y="103" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">MVP 개발</text>
+  <text x="141" y="116" text-anchor="middle" font-size="9" fill="#666">베타 200가구 · 피드백 반영</text>
+  <!-- KPI below -->
+  <line x1="140" y1="180" x2="140" y2="228" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+  <text x="141" y="244" text-anchor="middle" font-size="9" fill="#4f8ef7">LLM 통화 · 음성 분석 · 앱 베타</text>
+
+  <!-- Phase 2: 6-12 months -->
+  <line x1="320" y1="180" x2="320" y2="120" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="320" cy="180" r="7" fill="#22c55e" stroke="#0a0a0a" stroke-width="2"/>
+  <rect x="238" y="68" width="166" height="52" rx="7" fill="#111" stroke="#14532d" stroke-width="1.5"/>
+  <text x="321" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#22c55e" letter-spacing="0.06em">6 – 12개월</text>
+  <text x="321" y="103" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">정식 출시</text>
+  <text x="321" y="116" text-anchor="middle" font-size="9" fill="#666">유료 전환 1,000가구 목표</text>
+  <line x1="320" y1="180" x2="320" y2="228" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+  <text x="321" y="244" text-anchor="middle" font-size="9" fill="#22c55e">구독 단가 검증 · 이탈률 측정</text>
+
+  <!-- Phase 3: 1-2 years -->
+  <line x1="560" y1="180" x2="560" y2="120" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="560" cy="180" r="7" fill="#f59e0b" stroke="#0a0a0a" stroke-width="2"/>
+  <rect x="473" y="68" width="178" height="52" rx="7" fill="#111" stroke="#422006" stroke-width="1.5"/>
+  <text x="562" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#f59e0b" letter-spacing="0.06em">1 – 2년차</text>
+  <text x="562" y="103" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">B2B 채널 확대</text>
+  <text x="562" y="116" text-anchor="middle" font-size="9" fill="#666">기업 EAP · 요양원·실버타운 파트너십</text>
+  <line x1="560" y1="180" x2="560" y2="228" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+  <text x="562" y="244" text-anchor="middle" font-size="9" fill="#f59e0b">B2B2C · 月 순환 매출 확대</text>
+
+  <!-- Phase 4: 3 years -->
+  <line x1="760" y1="180" x2="760" y2="120" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="760" cy="180" r="7" fill="#a855f7" stroke="#0a0a0a" stroke-width="2"/>
+  <rect x="676" y="68" width="170" height="52" rx="7" fill="#111" stroke="#3d0764" stroke-width="1.5"/>
+  <text x="761" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#a855f7" letter-spacing="0.06em">3년차</text>
+  <text x="761" y="103" text-anchor="middle" font-size="11" font-weight="700" fill="#f0f0f0">글로벌 · 보험 연계</text>
+  <text x="761" y="116" text-anchor="middle" font-size="9" fill="#666">장기요양보험 · 해외 교민 시장</text>
+  <line x1="760" y1="180" x2="760" y2="228" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+  <text x="761" y="244" text-anchor="middle" font-size="9" fill="#a855f7">일본·미국 한인 · 연 매출 ₩120억</text>
+
+  <!-- KPI milestone boxes at bottom -->
+  <rect x="60" y="270" width="162" height="56" rx="7" fill="#111" stroke="#222" stroke-width="1"/>
+  <text x="141" y="289" text-anchor="middle" font-size="9" fill="#555" letter-spacing="0.06em">핵심 KPI</text>
+  <text x="141" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#4f8ef7">베타 200가구</text>
+  <text x="141" y="319" text-anchor="middle" font-size="9" fill="#666">통화 완료율 95%↑</text>
+
+  <rect x="238" y="270" width="166" height="56" rx="7" fill="#111" stroke="#222" stroke-width="1"/>
+  <text x="321" y="289" text-anchor="middle" font-size="9" fill="#555" letter-spacing="0.06em">핵심 KPI</text>
+  <text x="321" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#22c55e">유료 1,000가구</text>
+  <text x="321" y="319" text-anchor="middle" font-size="9" fill="#666">프리미엄 전환율 20%↑</text>
+
+  <rect x="473" y="270" width="178" height="56" rx="7" fill="#111" stroke="#222" stroke-width="1"/>
+  <text x="562" y="289" text-anchor="middle" font-size="9" fill="#555" letter-spacing="0.06em">핵심 KPI</text>
+  <text x="562" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">B2B 파트너 10개↑</text>
+  <text x="562" y="319" text-anchor="middle" font-size="9" fill="#666">월 이탈률 3%↓</text>
+
+  <rect x="676" y="270" width="170" height="56" rx="7" fill="#111" stroke="#222" stroke-width="1"/>
+  <text x="761" y="289" text-anchor="middle" font-size="9" fill="#555" letter-spacing="0.06em">핵심 KPI</text>
+  <text x="761" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#a855f7">가입 5만 가구</text>
+  <text x="761" y="319" text-anchor="middle" font-size="9" fill="#666">연 매출 ₩120억</text>
+
+  <!-- Arrow at end of timeline -->
+  <polygon points="820,174 832,180 820,186" fill="#333"/>
+</svg>

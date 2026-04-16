@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareRing — 30일 트렌드</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #161616; --border: #222;
+      --text: #f0f0f0; --muted: #777; --accent: #4f8ef7;
+      --green: #22c55e; --amber: #f59e0b;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+    .shell { display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 1.25rem 0; flex-shrink: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 0 1.25rem 1.25rem; font-size: 1rem; font-weight: 800; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+    .sidebar-logo span { color: var(--accent); }
+    .sidebar-section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #444; padding: 0 1.25rem; margin: 0.75rem 0 0.25rem; text-transform: uppercase; }
+    .sidebar-item { padding: 0.5rem 1.25rem; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .sidebar-item.active { background: rgba(79,142,247,0.1); color: var(--accent); border-right: 2px solid var(--accent); }
+    .sidebar-item:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
+    .sidebar-bottom { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+    .plan-badge { display: inline-block; background: rgba(79,142,247,0.15); color: var(--accent); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 0.4rem; }
+    .main { flex: 1; overflow-y: auto; }
+    .topbar { height: 52px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; background: var(--surface); position: sticky; top: 0; z-index: 10; }
+    .topbar-title { font-size: 13px; font-weight: 600; }
+    .content { padding: 1.75rem; max-width: 1000px; }
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .page-header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.03em; }
+    .page-header .sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .status-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.08); color: var(--green); font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 6px; border: 1px solid rgba(34,197,94,0.2); }
+    /* Completion bar */
+    .completion-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 2rem; }
+    .completion-num { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; }
+    .completion-label { font-size: 12px; color: var(--muted); }
+    .progress-wrap { flex: 1; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--green); border-radius: 4px; }
+    /* 4 mini charts */
+    .mini-charts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
+    .mini-chart { background: var(--surface); padding: 1.1rem 1.25rem; }
+    .mc-label { font-size: 10px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .mc-trend { display: flex; align-items: flex-end; gap: 6px; height: 56px; }
+    .mc-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 4px; }
+    .mc-weeks { display: flex; justify-content: space-between; font-size: 9px; color: #444; margin-top: 5px; }
+    .mc-delta { font-size: 11px; font-weight: 700; margin-top: 6px; }
+    /* Callout card */
+    .callout { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 1.1rem 1.5rem; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.75rem; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout-title { font-size: 12px; font-weight: 700; color: var(--amber); margin-bottom: 3px; }
+    .callout-text { font-size: 12px; color: #aaa; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="sidebar-logo">Care<span>Ring</span></div>
+    <div class="sidebar-section">Overview</div>
+    <a href="dashboard.html" class="sidebar-item">📊 대시보드</a>
+    <a href="weekly_report.html" class="sidebar-item">📋 주간 리포트</a>
+    <a href="trend_overview.html" class="sidebar-item active">📈 30일 트렌드</a>
+    <div class="sidebar-section">Details</div>
+    <a href="call_detail.html" class="sidebar-item">📞 통화 내역</a>
+    <a href="emergency_alert.html" class="sidebar-item">🚨 알림</a>
+    <div class="sidebar-section">Settings</div>
+    <a href="call_settings.html" class="sidebar-item">⚙️ 통화 설정</a>
+    <div class="sidebar-bottom">
+      <div class="plan-badge">스탠다드</div>
+      <div style="font-size:11px; color: var(--muted);">다음 갱신일<br><span style="color:var(--text)">2026년 5월 16일</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">30일 트렌드 — 3월 17일 ~ 4월 16일</div>
+      <span style="font-size:12px; color:var(--muted)">김순자님 · 74세</span>
+    </div>
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <h1>30일 트렌드 개요</h1>
+          <div class="sub">3월 17일 ~ 4월 16일 · 4주 집계</div>
+        </div>
+        <div class="status-badge">전반적으로 양호</div>
+      </div>
+
+      <!-- Completion -->
+      <div class="completion-card">
+        <div>
+          <div class="completion-num" style="color:var(--green)">28<span style="font-size:1.1rem;font-weight:400;color:var(--muted)">/30</span></div>
+          <div class="completion-label">통화 완료</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>이번 달 통화 완료율</span><span style="color:var(--green); font-weight:700;">93.3%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:93.3%"></div></div>
+          <div style="font-size:11px; color:var(--muted); margin-top:6px;">미완료 2회 — 어르신 부재 (자동 재시도 없음)</div>
+        </div>
+      </div>
+
+      <!-- 4 mini charts -->
+      <div class="mini-charts">
+        <!-- Latency: improving -->
+        <div class="mini-chart">
+          <div class="mc-label">응답 지연 (s)</div>
+          <div class="mc-trend">
+            <div class="mc-bar" style="height:85%; background:#4f8ef7; opacity:.5;"></div>
+            <div class="mc-bar" style="height:72%; background:#4f8ef7; opacity:.65;"></div>
+            <div class="mc-bar" style="height:60%; background:#4f8ef7; opacity:.8;"></div>
+            <div class="mc-bar" style="height:60%; background:#4f8ef7; opacity:.9;"></div>
+          </div>
+          <div class="mc-weeks"><span>1주</span><span>2주</span><span>3주</span><span>4주</span></div>
+          <div class="mc-delta" style="color:var(--green)">▼ 0.3s 개선</div>
+          <div style="font-size:10px; color:var(--muted); margin-top:2px;">2.1 → 1.9 → 1.8 → 1.8s</div>
+        </div>
+        <!-- Speech rate: stable -->
+        <div class="mini-chart">
+          <div class="mc-label">발화 속도 (WPM)</div>
+          <div class="mc-trend">
+            <div class="mc-bar" style="height:60%; background:#22c55e; opacity:.6;"></div>
+            <div class="mc-bar" style="height:68%; background:#22c55e; opacity:.7;"></div>
+            <div class="mc-bar" style="height:72%; background:#22c55e; opacity:.8;"></div>
+            <div class="mc-bar" style="height:70%; background:#22c55e; opacity:.9;"></div>
+          </div>
+          <div class="mc-weeks"><span>1주</span><span>2주</span><span>3주</span><span>4주</span></div>
+          <div class="mc-delta" style="color:var(--muted)">— 안정적</div>
+          <div style="font-size:10px; color:var(--muted); margin-top:2px;">108 → 110 → 112 → 111 WPM</div>
+        </div>
+        <!-- Pause: watch week 3 -->
+        <div class="mini-chart">
+          <div class="mc-label">침묵 빈도 (회)</div>
+          <div class="mc-trend">
+            <div class="mc-bar" style="height:55%; background:#4f8ef7; opacity:.6;"></div>
+            <div class="mc-bar" style="height:45%; background:#4f8ef7; opacity:.7;"></div>
+            <div class="mc-bar" style="height:85%; background:#f59e0b; opacity:.85;"></div>
+            <div class="mc-bar" style="height:45%; background:#4f8ef7; opacity:.9;"></div>
+          </div>
+          <div class="mc-weeks"><span>1주</span><span>2주</span><span>3주</span><span>4주</span></div>
+          <div class="mc-delta" style="color:var(--amber)">▲ 3주차 주의</div>
+          <div style="font-size:10px; color:var(--muted); margin-top:2px;">6 → 5 → 7 → 5 회/통화</div>
+        </div>
+        <!-- Emotional: dip + recovery -->
+        <div class="mini-chart">
+          <div class="mc-label">감정 점수 (/100)</div>
+          <div class="mc-trend">
+            <div class="mc-bar" style="height:55%; background:#4f8ef7; opacity:.6;"></div>
+            <div class="mc-bar" style="height:65%; background:#4f8ef7; opacity:.7;"></div>
+            <div class="mc-bar" style="height:48%; background:#f59e0b; opacity:.8;"></div>
+            <div class="mc-bar" style="height:78%; background:#22c55e; opacity:.9;"></div>
+          </div>
+          <div class="mc-weeks"><span>1주</span><span>2주</span><span>3주</span><span>4주</span></div>
+          <div class="mc-delta" style="color:var(--green)">▲ 4주차 회복</div>
+          <div style="font-size:10px; color:var(--muted); margin-top:2px;">74 → 76 → 73 → 78점</div>
+        </div>
+      </div>
+
+      <!-- Callout: notable week -->
+      <div class="callout">
+        <div class="callout-icon">⚠️</div>
+        <div>
+          <div class="callout-title">3주차 주목 구간 (4월 1일 ~ 7일)</div>
+          <div class="callout-text">3주차에 침묵 빈도가 주간 최고치(7회/통화)를 기록하고 감정 점수가 소폭 하락(73점)하였으나, 4주차에 침묵 빈도 5회·감정 점수 78점으로 정상 범위 내 회복되었습니다. 단기 컨디션 변화로 판단되며 추가 관찰이 권장됩니다.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
