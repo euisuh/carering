@@ -651,6 +651,7 @@
             <th>발화 속도</th>
             <th>침묵</th>
             <th>상태</th>
+            <th>메모</th>
             <th></th>
           </tr>
         </thead>
@@ -878,7 +879,8 @@ function renderHistory() {
       <td class="text-muted">${c.wpm} WPM</td>
       <td class="text-muted">${c.pau}회</td>
       <td>${statusBadge(c.status)}</td>
-      <td>${c.note ? `<span style="font-size:11px;color:var(--muted);max-width:160px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.note}</span>` : ''}</td>
+      <td>${c.note ? `<span style="font-size:11px;color:var(--muted);max-width:140px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.note}</span>` : ''}</td>
+      <td><a href="call_detail.html" style="font-size:11px;color:var(--accent);text-decoration:none;white-space:nowrap;">상세 보기 →</a></td>
     </tr>`).join('');
   tbody.innerHTML = rows;
 }
